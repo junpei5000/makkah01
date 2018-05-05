@@ -38,7 +38,7 @@ export class HomePage {
 
       let onCompassSuccess = function(response1: DeviceOrientationCompassHeading){
         self.deviceInfo.setMagneticHeading(response1.magneticHeading)
-        alert("onCompassSuccess : " + response1.magneticHeading);
+        //alert("onCompassSuccess : " + response1.magneticHeading);
       }
 
       let onCompassError = function(error: any){
@@ -47,7 +47,7 @@ export class HomePage {
       }
 
       let onCompassChange = function(response2: DeviceOrientationCompassHeading){
-        alert("onCompassChange : " + response2.magneticHeading);
+        //alert("onCompassChange : " + response2.magneticHeading);
         //if(self.deviceInfo.getMagneticHeading()!=response2.magneticHeading){
           self.deviceInfo.setMagneticHeading(response2.magneticHeading);
           self.imgSet();
@@ -55,8 +55,8 @@ export class HomePage {
       }
 
       const compassOptions={
-        //frequency:200
-        filter:5
+        frequency:200
+        //filter:5
       };
 
       self.deviceOrientation.getCurrentHeading().then(onCompassSuccess,onCompassError);
@@ -102,8 +102,8 @@ export class HomePage {
         maximumAge: 0
       };
 
-      //navigator.geolocation.getCurrentPosition(onLocationSuccess, onLocationError,locationOptions);
-      navigator.geolocation.watchPosition(onLocationChange, onLocationError, locationOptions);
+      navigator.geolocation.getCurrentPosition(onLocationSuccess, onLocationError,locationOptions);
+      //navigator.geolocation.watchPosition(onLocationChange, onLocationError, locationOptions);
 
     });
 
