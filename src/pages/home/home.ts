@@ -16,14 +16,20 @@ export class HomePage {
   private angle:number;
   private distance:number;
   private calcLogic:CalcLogic;
-  private deviceInfo:DeviceInfo;
+//  private deviceInfo:DeviceInfo;
   private c:HTMLCanvasElement;
   private ctx:CanvasRenderingContext2D;
   private image:HTMLImageElement;
   private imgUrl = "assets/imgs/yajirushi.png";
 
+  private elm_yajirushi:any;
+  private elm_compass:any;
+  private magneticHeading:number;
+  private loc_lat: number;
+  private loc_lng: number;
+
   constructor(public navCtrl: NavController,private deviceOrientation: DeviceOrientation,private geolocation: Geolocation,private platform: Platform) {
-    this.deviceInfo = new DeviceInfo();
+    //this.deviceInfo = new DeviceInfo();
     this.calcLogic = new CalcLogic();
     this.initDeviceInfo()
   }
@@ -32,13 +38,29 @@ export class HomePage {
     let self = this;
 
     //デバイスの向き設定
-    self.deviceInfo.setMagneticHeading(0);
+    //self.deviceInfo.setMagneticHeading(0);
+    self.magneticHeading = 0;
+    self.loc_lat = 0;
+    self.loc_lng = 0;
 
     self.platform.ready().then(() => {
 
       let onCompassSuccess = function(response1: DeviceOrientationCompassHeading){
-        self.deviceInfo.setMagneticHeading(response1.magneticHeading)
-        //alert("onCompassSuccess : " + response1.magneticHeading);
+        //self.deviceInfo.setMagneticHeading(response1.magneticHeading)
+        self.magneticHeading = response1.magneticHeading;
+        self.angle = self.calcLogic.getMakkahAngle(self.loc_lat,self.loc_lng,self.magneticHeading);
+        self.distance = self.calcLogic.getMakkahDistance(self.loc_lat,self.loc_lng);
+      }
+
+      let onCompassChange = function(response2: DeviceOrientationCompassHeading){
+        //alert("onCompassChange : " + response2.magneticHeading);
+        //if(self.deviceInfo.getMagneticHeading()!=response2.magneticHeading){
+          //self.deviceInfo.setMagneticHeading(response2.magneticHeading);
+          self.magneticHeading = response2.magneticHeading;
+          self.angle = self.calcLogic.getMakkahAngle(self.loc_lat,self.loc_lng,self.magneticHeading);
+          self.distance = self.calcLogic.getMakkahDistance(self.loc_lat,self.loc_lng);
+          self.imgSet();
+        //}
       }
 
       let onCompassError = function(error: any){
@@ -46,17 +68,9 @@ export class HomePage {
         console.log(error+"err");
       }
 
-      let onCompassChange = function(response2: DeviceOrientationCompassHeading){
-        //alert("onCompassChange : " + response2.magneticHeading);
-        //if(self.deviceInfo.getMagneticHeading()!=response2.magneticHeading){
-          self.deviceInfo.setMagneticHeading(response2.magneticHeading);
-          self.imgSet();
-        //}
-      }
-
       const compassOptions={
-        frequency:200
-        //filter:5
+        //frequency:10
+        filter:1
       };
 
       self.deviceOrientation.getCurrentHeading().then(onCompassSuccess,onCompassError);
@@ -64,28 +78,39 @@ export class HomePage {
       const watchCompassId = self.deviceOrientation.watchHeading(compassOptions);
       watchCompassId.subscribe(onCompassChange,onCompassError);
 
-      console.log("magneticHeading:" + this.deviceInfo.getMagneticHeading());
+      //console.log("magneticHeading:" + self.magneticHeading);
 
 
 
     //デバイスの位置情報設定
-    console.log("navigator.geolocation works well");
+    //console.log("navigator.geolocation works well");
 
       let onLocationSuccess = function(position) {
         
-        self.deviceInfo.setLoclat(position.coords.latitude)
-        self.deviceInfo.setLoclng(position.coords.longitude)
-        self.imgSet();
+        self.loc_lat = position.coords.latitude;
+        self.loc_lng = position.coords.longitude;
+        //self.deviceInfo.setLoclat(position.coords.latitude)
+        //self.deviceInfo.setLoclng(position.coords.longitude)
+        
+        //self.angle = self.calcLogic.getMakkahAngle(self.loc_lat,self.loc_lng,self.magneticHeading);
+        //self.distance = self.calcLogic.getMakkahDistance(self.loc_lat,self.loc_lng);
+        
+        //self.imgSet();
         //navigator.geolocation.watchPosition(onLocationChange, onError, locationOptions);
 
       };
 
       let onLocationChange = function(position) {
 
-        self.deviceInfo.setLoclat(position.coords.latitude)
-        self.deviceInfo.setLoclng(position.coords.longitude)
+        self.loc_lat = position.coords.latitude;
+        self.loc_lng = position.coords.longitude;
+        //self.deviceInfo.setLoclat(position.coords.latitude)
+        //self.deviceInfo.setLoclng(position.coords.longitude)
+        
+        //self.angle = self.calcLogic.getMakkahAngle(self.loc_lat,self.loc_lng,self.magneticHeading);
+        //self.distance = self.calcLogic.getMakkahDistance(self.loc_lat,self.loc_lng);
 
-        self.imgSet();
+        //self.imgSet();
 
       };
   
@@ -102,14 +127,41 @@ export class HomePage {
         maximumAge: 0
       };
 
-      navigator.geolocation.getCurrentPosition(onLocationSuccess, onLocationError,locationOptions);
-      //navigator.geolocation.watchPosition(onLocationChange, onLocationError, locationOptions);
+      //navigator.geolocation.getCurrentPosition(onLocationSuccess, onLocationError,locationOptions);
+      navigator.geolocation.watchPosition(onLocationChange, onLocationError, locationOptions);
 
+
+      self.elm_yajirushi = document.getElementById("yajirushi");
+      self.elm_compass = document.getElementById("compass");
+      self.setScreen();
     });
 
   }
 
+  setScreen(){
+    let self = this;
+    if(document.documentElement.clientWidth<=document.documentElement.clientHeight){
+      self.elm_compass.style.width = document.documentElement.clientWidth - 64 + "px";
+      self.elm_compass.style.height = document.documentElement.clientWidth - 64 + "px";
+    }else{
+      self.elm_compass.style.width = document.documentElement.clientHeight - 264 + "px";
+      self.elm_compass.style.height = document.documentElement.clientHeight - 264; + "px"
+    }
+  }
+
   imgSet() {
+    let self = this;
+    //alert(self.elm_yajirushi);
+
+    
+
+    if (typeof self.elm_yajirushi.style.transform !== "undefined") {
+      self.elm_yajirushi.style.transform = "rotateZ(" + self.angle + "deg)";
+    } else if (typeof self.elm_yajirushi.style.webkitTransform !== "undefined") {
+      self.elm_yajirushi.style.webkitTransform = "rotateZ(" + self.angle + "deg)";
+    }
+
+    /*
     let self = this;
     self.angle = self.calcLogic.getMakkahAngle(self.deviceInfo.getLoclat(),self.deviceInfo.getLoclng(),self.deviceInfo.getMagneticHeading());
     self.distance = self.calcLogic.getMakkahDistance(self.deviceInfo.getLoclat(),self.deviceInfo.getLoclng());
@@ -137,6 +189,7 @@ export class HomePage {
       
     };
     self.image.src = self.imgUrl;
+    */
 
 
   }

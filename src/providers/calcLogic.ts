@@ -1,12 +1,45 @@
+import { GoogleMaps, GoogleMap, GoogleMapsEvent,Spherical,LatLng } from '@ionic-native/google-maps';
 import { Injectable } from '@angular/core';
-import { MAKKAH_LNG, MAKKAH_LAT } from '../shared/constant';
+import { MAKKAH_LNG, MAKKAH_LAT,EARTH_RADIUS } from '../shared/constant';
+import { getNonHydratedSegmentIfLinkAndUrlMatch } from 'ionic-angular/navigation/url-serializer';
 
 @Injectable()
 export class CalcLogic {
 
 
-    constructor() {}
+    //private end:LatLng;
 
+    constructor() {
+        //this.end = new LatLng( MAKKAH_LAT, MAKKAH_LNG ) ;
+    }
+
+    /*
+    getMakkahAngle(lat:number,lng:number,head:number){
+        let start = { lat:lat, lng:lng };
+        let end = { lat:MAKKAH_LAT, lng:MAKKAH_LAT };
+        //var end =   { MAKKAH_LAT, MAKKAH_LNG,false:boolean}
+        //var end = new LatLng( MAKKAH_LAT, MAKKAH_LNG ) ;
+        let angle1 = Spherical.computeHeading(start,end);
+        if(angle1<0){
+            angle1 = angle1 + 360;
+        }
+        angle1 = angle1 + head;
+        if (angle1 >= 360) {
+            angle1 = angle1 - 360; //0～360 にする。
+        }
+        return angle1
+    }
+
+    getMakkahDistance(lat:number,lng:number){
+        let start = { lat:lat, lng:lng };
+        let end = { lat:MAKKAH_LAT, lng:MAKKAH_LAT };
+        //var end =   { MAKKAH_LAT, MAKKAH_LNG,false:boolean}
+        //var end = new LatLng( MAKKAH_LAT, MAKKAH_LNG ) ;
+        return Spherical.computeDistanceBetween(start,end);
+    }
+    */
+
+    /*
     getMakkahAngle(lat:number,lng:number,head:number){
         let angle:number;
         // ここから角度
@@ -60,5 +93,36 @@ export class CalcLogic {
 
         return distance;
     }
+    */
+    getMakkahAngle(lat:number,lng:number,head:number){
+        let fromLat:number = this.getRadian(lat);
+        let fromLng:number = this.getRadian(lng);
+        let toLat:number = this.getRadian(MAKKAH_LAT);
+        let toLng:number = this.getRadian(MAKKAH_LNG) - fromLng;
+        let tmp_angle:number = 360 - head + this.getDegree(Math.atan2(Math.sin(toLng)*Math.cos(toLat),Math.cos(fromLat)*Math.sin(toLat)-Math.sin(fromLat)*Math.cos(toLat)*Math.cos(toLng)));
+        //alert("tmp_angle: " + tmp_angle);
+        return this.calcAngle(tmp_angle,0,360);
+    }
 
+    getMakkahDistance(lat:number,lng:number){
+        let fromLat:number = this.getRadian(lat);
+        let fromLng:number = this.getRadian(lng);
+        let toLat:number = this.getRadian(MAKKAH_LAT);
+        let toLng:number = this.getRadian(MAKKAH_LNG);
+        //return this.calcDist(lat,lng)*EARTH_RADIUS/1000;
+        return 2*Math.asin(Math.sqrt(Math.pow(Math.sin((fromLat-toLat)/2),2)+Math.cos(fromLat)*Math.cos(toLat)*Math.pow(Math.sin((fromLng-toLng)/2),2)))*EARTH_RADIUS/1000;
+    }
+
+    calcAngle = function(angle:number,deg1:number,deg2:number){
+        deg2-=deg1;
+        return ((angle-deg1)%deg2+deg2)%deg2+deg1;
+    }
+
+    getRadian = function(degree:number){
+        return degree*Math.PI/180;
+    }
+
+    getDegree = function(radian:number){
+        return 180*radian/Math.PI;
+    }
 }
