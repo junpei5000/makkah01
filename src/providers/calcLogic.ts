@@ -1,7 +1,6 @@
-import { GoogleMaps, GoogleMap, GoogleMapsEvent,Spherical,LatLng } from '@ionic-native/google-maps';
+//import { GoogleMaps, GoogleMap, GoogleMapsEvent,Spherical,LatLng } from '@ionic-native/google-maps';
 import { Injectable } from '@angular/core';
 import { MAKKAH_LNG, MAKKAH_LAT,EARTH_RADIUS } from '../shared/constant';
-import { getNonHydratedSegmentIfLinkAndUrlMatch } from 'ionic-angular/navigation/url-serializer';
 
 @Injectable()
 export class CalcLogic {
