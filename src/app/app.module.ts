@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-native/device-orientation';
 import { Geolocation } from '@ionic-native/geolocation';
+import { GoogleMaps } from "@ionic-native/google-maps";
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -29,6 +30,7 @@ import { CalcLogic } from '../providers/calcLogic';
     SplashScreen,
     DeviceOrientation,
     Geolocation,
+    GoogleMaps,
     CalcLogic,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

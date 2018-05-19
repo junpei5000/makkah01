@@ -1,7 +1,7 @@
 export class DeviceInfo{
     private loc_lat: number;
     private loc_lng: number;
-    private magneticHeading: any;
+    private magneticHeading: number;
 
     constructor() {}
     
