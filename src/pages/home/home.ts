@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { ModalController } from 'ionic-angular';
 import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-native/device-orientation';
 import { Geolocation} from '@ionic-native/geolocation';
 import { Platform } from 'ionic-angular';
 import { CalcLogic } from '../../providers/calcLogic';
 import { DeviceInfo } from '../../shared/deviceInfo';
+import { LocationSelectModalPage } from '../location-select-modal/location-select-modal';
 
 @Component({
   selector: 'page-home',
@@ -16,7 +18,7 @@ export class HomePage {
   private angle:number;
   private distance:number;
   private calcLogic:CalcLogic;
-//  private deviceInfo:DeviceInfo;
+  private deviceInfo:DeviceInfo;
   private c:HTMLCanvasElement;
   private ctx:CanvasRenderingContext2D;
   private image:HTMLImageElement;
@@ -28,7 +30,13 @@ export class HomePage {
   private loc_lat: number;
   private loc_lng: number;
 
-  constructor(public navCtrl: NavController,private deviceOrientation: DeviceOrientation,private geolocation: Geolocation,private platform: Platform) {
+  constructor(
+    public navCtrl: NavController,
+    private deviceOrientation: DeviceOrientation,
+    private geolocation: Geolocation,
+    private platform: Platform,
+    private modalCtrl: ModalController
+  ) {
     //this.deviceInfo = new DeviceInfo();
     this.calcLogic = new CalcLogic();
     this.initDeviceInfo()
@@ -132,8 +140,8 @@ export class HomePage {
       // onError Callback receives a PositionError object
       //
       function onLocationError(error) {
-        alert('code: '    + error.code    + '\n' +
-              'message: ' + error.message + '\n');
+        self.openModal() 
+        console.log('code: ' + error.code + ', message: ' + error.message);
       }
 
       const locationOptions = {
@@ -207,6 +215,22 @@ export class HomePage {
     */
 
 
+  }
+
+  openModal() {
+    let myModal = this.modalCtrl.create(LocationSelectModalPage);
+    let self = this;
+
+    myModal.onDidDismiss(data => {
+      self.deviceInfo = data;
+      self.loc_lat = self.deviceInfo.getLoclat();
+      self.loc_lng = self.deviceInfo.getLoclng();
+      self.angle = self.calcLogic.getMakkahAngle(self.loc_lat,self.loc_lng,self.magneticHeading);
+      self.distance = self.calcLogic.getMakkahDistance(self.loc_lat,self.loc_lng);
+      self.imgSet();
+    });
+
+    myModal.present();
   }
 
 }

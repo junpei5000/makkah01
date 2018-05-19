@@ -10,11 +10,13 @@ import { GoogleMaps } from "@ionic-native/google-maps";
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { CalcLogic } from '../providers/calcLogic';
+import { LocationSelectModalPage } from '../pages/location-select-modal/location-select-modal';
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    LocationSelectModalPage
   ],
   imports: [
     BrowserModule,
@@ -23,7 +25,8 @@ import { CalcLogic } from '../providers/calcLogic';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    LocationSelectModalPage
   ],
   providers: [
     StatusBar,
