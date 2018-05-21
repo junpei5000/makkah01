@@ -54,20 +54,10 @@ export class HomePage {
     self.platform.ready().then(() => {
 
       let onCompassSuccess = function(response1: DeviceOrientationCompassHeading){
-<<<<<<< HEAD
-        self.deviceInfo.setMagneticHeading(response1.magneticHeading)
-        //alert("onCompassSuccess : " + response1.magneticHeading);
-      }
-
-      let onCompassError = function(error: any){
-        //alert('コンパスのエラーが発生しました: ' + error);
-        console.log(error+"err");
-=======
         //self.deviceInfo.setMagneticHeading(response1.magneticHeading)
         self.magneticHeading = response1.magneticHeading;
         self.angle = self.calcLogic.getMakkahAngle(self.loc_lat,self.loc_lng,self.magneticHeading);
         self.distance = self.calcLogic.getMakkahDistance(self.loc_lat,self.loc_lng);
->>>>>>> d4a381a26c0215e340fb8d7ab2c3b4be3c097699
       }
 
       let onCompassChange = function(response2: DeviceOrientationCompassHeading){
@@ -87,13 +77,8 @@ export class HomePage {
       }
 
       const compassOptions={
-<<<<<<< HEAD
-        frequency:200
-        //filter:5
-=======
         //frequency:10
         filter:1
->>>>>>> d4a381a26c0215e340fb8d7ab2c3b4be3c097699
       };
 
       self.deviceOrientation.getCurrentHeading().then(onCompassSuccess,onCompassError);
@@ -140,7 +125,7 @@ export class HomePage {
       // onError Callback receives a PositionError object
       //
       function onLocationError(error) {
-        self.openModal() 
+        //self.openModal() 
         console.log('code: ' + error.code + ', message: ' + error.message);
       }
 
