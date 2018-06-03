@@ -3,7 +3,7 @@
     <name>yajiri01</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://192.168.100.130:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -89,6 +89,7 @@
         <variable name="API_KEY_FOR_ANDROID" value="AIzaSyDK_5Yhrq7FlkAe3v_8qMT3AMRm49Jc1x4" />
         <variable name="API_KEY_FOR_IOS" value="AIzaSyDK_5Yhrq7FlkAe3v_8qMT3AMRm49Jc1x4" />
     </plugin>
+    <allow-navigation href="http://192.168.100.130:8100" />
     <engine name="ios" spec="4.5.4" />
     <engine name="browser" spec="5.0.3" />
     <engine name="android" spec="7.0.0" />
