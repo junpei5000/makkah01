@@ -30,6 +30,8 @@ export class HomePage {
   private loc_lat: number;
   private loc_lng: number;
 
+  private $BGcolor;
+
   constructor(
     public navCtrl: NavController,
     private deviceOrientation: DeviceOrientation,
@@ -44,12 +46,21 @@ export class HomePage {
 
   initDeviceInfo(){
     let self = this;
+    
 
     //デバイスの向き設定
     //self.deviceInfo.setMagneticHeading(0);
     self.magneticHeading = 0;
     self.loc_lat = 0;
     self.loc_lng = 0;
+
+    window.addEventListener("load", function(){
+      var fig:HTMLIFrameElement = <HTMLIFrameElement>document.getElementById('yajirushi_object');
+      var fig2 = fig.contentDocument;
+      self.$BGcolor = $(fig2).find('.BGcolor');
+      //self.$BGcolor.css('fill', '#0000ff');
+    });
+
 
     self.platform.ready().then(() => {
 
@@ -78,8 +89,8 @@ export class HomePage {
       }
 
       const compassOptions={
-        //frequency:10
-        filter:1
+        frequency:10
+        //filter:1
       };
 
       self.deviceOrientation.getCurrentHeading().then(onCompassSuccess,onCompassError);
@@ -120,7 +131,6 @@ export class HomePage {
         //self.distance = self.calcLogic.getMakkahDistance(self.loc_lat,self.loc_lng);
 
         //self.imgSet();
-
       };
   
       // onError Callback receives a PositionError object
@@ -143,7 +153,11 @@ export class HomePage {
       self.elm_yajirushi = document.getElementById("yajirushi");
       self.elm_compass = document.getElementById("compass");
       self.setScreen();
+
       //$('svg').find('path, text').css('fill', '#0000ff');
+      
+
+
     });
 
   }
@@ -224,10 +238,10 @@ export class HomePage {
   }
 
   colorChange(a:number){
-
+    let self = this;
     var rgb = $('.scroll-content').css('backgroundColor');
-    var svg = document.getElementById('BGC').ownerDocument;
-    $('#BGC').find('path, text').css('fill', '#ffffff');
+    //var svg = document.getElementById('BGC').ownerDocument;
+    //$('#BGC').find('path, text').css('fill', '#ffffff');
     //console.log(rgb.match(/^rgb\((0+),\s*(0+),\s*(0+)\)$/));
     //alert(rgb);
     //alert(rgb=="rgb(35, 35, 35)")
@@ -237,21 +251,28 @@ export class HomePage {
     if(a <= 10 || a >= 350){
       if(rgb=="rgb(35, 35, 35)"){
           $('.scroll-content').animate({
-            backgroundColor:'#4d0000'
-          }, 300 );
+            backgroundColor:'#F2F2F2'
+          }, 500 );
+          self.$BGcolor.css({
+            fill:'#232323'
+          });
         //colorFlag = true;
       }
     }else{
-      if(rgb=="rgb(77, 0, 0)"){
+      if(rgb=="rgb(242, 242, 242)"){
         $('.scroll-content').animate({
           backgroundColor:'#232323'
-        }, 300 );
+        }, 500 );
+        self.$BGcolor.css({
+          fill:'#F2F2F2'
+        });
         //colorFlag = false;
       }      
     }
 
   }
 
+  /*
   openModal() {
     let myModal = this.modalCtrl.create(LocationSelectModalPage);
     let self = this;
@@ -267,6 +288,7 @@ export class HomePage {
 
     myModal.present();
   }
+  */
 
 }
 
