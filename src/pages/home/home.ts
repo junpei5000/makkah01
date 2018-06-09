@@ -30,7 +30,14 @@ export class HomePage {
   private loc_lat: number;
   private loc_lng: number;
 
+  private display_angle:number;
+  private display_distance:number;
+  private display_loc_lat: number;
+  private display_loc_lng: number;
+
   private $BGcolor;
+
+  private colorFlag = true;
 
   constructor(
     public navCtrl: NavController,
@@ -80,6 +87,7 @@ export class HomePage {
           self.distance = self.calcLogic.getMakkahDistance(self.loc_lat,self.loc_lng);
           self.imgSet();
           self.colorChange(self.angle);
+          self.displayEdit();
         //}
       }
 
@@ -176,11 +184,11 @@ export class HomePage {
     }
     */
     if(screenWidth<=screenHeight){
-      self.elm_compass.style.width = screenWidth - 64 + "px";
-      self.elm_compass.style.height = screenWidth - 64 + "px";
+      self.elm_compass.style.width = screenWidth * 3 / 5 + "px";
+      self.elm_compass.style.height = screenWidth * 3 / 5 + "px";
     }else{
-      self.elm_compass.style.width = screenHeight - 264 + "px";
-      self.elm_compass.style.height = screenHeight - 264; + "px"
+      self.elm_compass.style.width = screenHeight * 3 / 5 + "px";
+      self.elm_compass.style.height = screenHeight * 3 / 5 + "px";
     }
 
     /*
@@ -239,7 +247,8 @@ export class HomePage {
 
   colorChange(a:number){
     let self = this;
-    var rgb = $('.scroll-content').css('backgroundColor');
+    //var rgb = $('.scroll-content').css('backgroundColor');
+    
     //var svg = document.getElementById('BGC').ownerDocument;
     //$('#BGC').find('path, text').css('fill', '#ffffff');
     //console.log(rgb.match(/^rgb\((0+),\s*(0+),\s*(0+)\)$/));
@@ -247,7 +256,29 @@ export class HomePage {
     //alert(rgb=="rgb(35, 35, 35)")
     //alert(rgb=="rgb(77, 0, 0)")
 
+    if(a <= 10 || a >= 350){
+      if(!self.colorFlag){
+          $('.scroll-content').animate({
+            backgroundColor:'#F2F2F2'
+          }, 500 );
+          self.$BGcolor.css({
+            fill:'#232323'
+          });
+        self.colorFlag = true;
+      }
+    }else{
+      if(self.colorFlag){
+        $('.scroll-content').animate({
+          backgroundColor:'#232323'
+        }, 500 );
+        self.$BGcolor.css({
+          fill:'#F2F2F2'
+        });
+        self.colorFlag = false;
+      } 
+    }
 
+    /*
     if(a <= 10 || a >= 350){
       if(rgb=="rgb(35, 35, 35)"){
           $('.scroll-content').animate({
@@ -267,9 +298,20 @@ export class HomePage {
           fill:'#F2F2F2'
         });
         //colorFlag = false;
-      }      
+      } 
     }
+    */
+  }
 
+  displayEdit(){
+    let self = this;
+    self.display_angle = Math.round(self.angle);
+    let temp_distance = self.distance * 10;
+    self.display_distance = Math.round(temp_distance) / 10;
+    let temp_loc_lat = self.loc_lat * 100;
+    self.display_loc_lat = Math.round(temp_loc_lat) / 100;
+    let temp_loc_lng = self.loc_lng * 100;
+    self.display_loc_lng = Math.round(temp_loc_lng) / 100;
   }
 
   /*

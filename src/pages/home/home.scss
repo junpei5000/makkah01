@@ -20,7 +20,8 @@ page-home {
           right: 0;
           bottom: 0;
           transform-origin: 50% 50%; 
-          margin: 0 auto;
+          //margin: 0 auto;
+          margin-top: 10px;
           height: 100%;
           width: 100%;
         }
@@ -36,6 +37,7 @@ page-home {
         background: #232323;
         box-shadow: 0 0 20px gray;
         border-radius: 10px;
+        margin-top: 20px;
     }
 
         .card-header-md{

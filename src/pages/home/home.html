@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Makkah!!!!!!!!
+      Qibla Pointer
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -18,10 +18,17 @@
   
   <ion-card>
     <ion-card-header>
-      Infomation
+      !! Attention !!
     </ion-card-header>
     <ion-card-content>
-      distance : {{distance}} , angle : {{angle}}
+        Be sure to turn on the location information to indicate the correct direction.
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-content>
+      Your location : {{display_loc_lat}} , {{display_loc_lng}} <br>
+      distance : {{display_distance}} km <br>
+      angle : {{display_angle}}
     </ion-card-content>
   </ion-card>
 </ion-content>
