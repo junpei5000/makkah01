@@ -206,13 +206,28 @@ export class HomePage {
     let self = this;
     //alert(self.elm_yajirushi);    
 
+    /*
     if (typeof self.elm_yajirushi.style.transform !== "undefined") {
       self.elm_yajirushi.style.transform = "rotateZ(" + self.angle + "deg)";
     } else if (typeof self.elm_yajirushi.style.webkitTransform !== "undefined") {
       self.elm_yajirushi.style.webkitTransform = "rotateZ(" + self.angle + "deg)";
     }
+    
+    $('#yajirushi').animate( { opacity: 1 }, {
+      duration: 1000,
+      step: function (now) {
+        $(this).css({ transform: 'rotate(' + now * self.angle + 'deg)' })
+      }
+    });
+    */
+    
+    $('#yajirushi').css({
+      transform: "rotateZ(" + self.angle + "deg)"
+    });
+  
 
-    /*
+
+/*
     let self = this;
     self.angle = self.calcLogic.getMakkahAngle(self.deviceInfo.getLoclat(),self.deviceInfo.getLoclng(),self.deviceInfo.getMagneticHeading());
     self.distance = self.calcLogic.getMakkahDistance(self.deviceInfo.getLoclat(),self.deviceInfo.getLoclng());
